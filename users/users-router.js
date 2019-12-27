@@ -57,9 +57,38 @@ router.get("/login", (req, res) => {
             res.status(500).json({message: "There was an error fetching logged in users", err})
         })
 });
-// router.post("/login", (req, res) => {});
-// router.put("/editProfile", (req, res) => {});
-// router.delete("/deleteProfile", (req, res) => {});
+router.post("/login", (req, res) => {
+     // login
+
+  console.log(req.body);
+  let { username, password } = req.body;
+
+  //if no credentials provided
+  if (!username || !password) {
+     res.status(401).json({ message: "Missing username or password" });
+  }
+
+
+
+  Users.findBy({ username })
+    .first()
+    .then(user => {
+      if (user && bcrypt.compareSync(password, user.password)) {
+          const token = genToken(user);
+
+         res.status(201).json({ message: "Successfully Log In!", token});
+      } else {
+          res.status(404).json({ message: "Credentials Error. Please verify the provided username and password!" });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+       res.status(500).json({message: "Login Error within the Database!", err});
+    });
+
+});
+// router.put("/editProfile/:id", (req, res) => {});
+// router.delete("/deleteProfile/:id", (req, res) => {});
 
 
 function genToken(user) {
