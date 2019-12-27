@@ -7,10 +7,11 @@ module.exports = {
     useNullAsDefault: true,
     connection: {
       filename: './data/celebrities.db3'
-    }, pool: {
+    }, 
+    pool: {
       afterCreate: (conn, done) => {
         conn.run('PRAGMA foreign_keys = ON', done);
-      },
+      }},
     migrations: {
       directory: './data/migrations',
       tableName: "dbmigrations"
@@ -51,4 +52,5 @@ module.exports = {
     }
   }
 
-};
+  }
+
