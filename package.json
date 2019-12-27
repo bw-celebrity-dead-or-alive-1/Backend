@@ -1,0 +1,20 @@
+{
+  "name": "Backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bw-celebrity-dead-or-alive-1/Backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bw-celebrity-dead-or-alive-1/Backend/issues"
+  },
+  "homepage": "https://github.com/bw-celebrity-dead-or-alive-1/Backend#readme"
+}
