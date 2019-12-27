@@ -16,5 +16,21 @@
   "bugs": {
     "url": "https://github.com/bw-celebrity-dead-or-alive-1/Backend/issues"
   },
-  "homepage": "https://github.com/bw-celebrity-dead-or-alive-1/Backend#readme"
+  "homepage": "https://github.com/bw-celebrity-dead-or-alive-1/Backend#readme",
+  "dependencies": {
+    "bcrypt": "^3.0.7",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "helmet": "^3.21.2",
+    "knex": "^0.20.4",
+    "nodemon": "^2.0.2",
+    "sqlite3": "^4.1.1"
+  },
+  "devDependencies": {
+    "cross-env": "^6.0.3",
+    "jest": "^24.9.0",
+    "supertest": "^4.0.2"
+  }
 }
