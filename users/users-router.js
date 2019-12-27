@@ -6,6 +6,7 @@ const secrets = require('../auth/secret');
 
 const Users = require('./users-model');
 
+//get logged in user info
 router.get('/register', (req, res) => {
     Users.find()
         .then(users => {
@@ -87,7 +88,19 @@ router.post("/login", (req, res) => {
     });
 
 });
-// router.put("/editProfile/:id", (req, res) => {});
+
+//NEED PUT AND DELETES FOR USER PROFILE!! EON 0 END OF NIGHT :)
+
+
+// router.put("/editProfile/:id", (req, res) => {
+//     const {body} = req;
+//     const {id} = req.params;
+
+//     if(body.password) {
+//         const hash = bcyrpt.hashSync(body.password, 12)
+//         body.password = hash;
+//     }
+// });
 // router.delete("/deleteProfile/:id", (req, res) => {});
 
 
