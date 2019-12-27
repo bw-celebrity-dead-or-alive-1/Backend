@@ -19,6 +19,7 @@ router.get('/register', (req, res) => {
 })
 
 router.post("/register", (req, res) => {
+    //post method for login credentials
     let user = req.body;
 
     //if missing username or password during registration
@@ -26,7 +27,7 @@ router.post("/register", (req, res) => {
         res.status(404).json({message: 'Missing Username or Password. Please reenter credentials'})
     } 
 
-    //if has username and password then...
+    //if has username and password then... register or error
     if(user.username && user.password) {
         const hash = bcrypt.hashSync(user.password, 12)
 
@@ -36,18 +37,14 @@ router.post("/register", (req, res) => {
             .then(saved => {
                 const token = genToken(saved)
                 //same as token: token
-                res.status(201).json({created_user: saved, token})
+                res.status(201).json({created_user: saved, message: "Successfully Registered!", token})
             })
             .catch(err => {
                 res.status(500).json({message: "Error Creating User in the Database", err})
             })
     }   else {
-        res.status(400).json
+        res.status(400).json({"Registration Error!"})
     }
-
-    
-
-
 
 });
 
