@@ -3,9 +3,13 @@ const db = require('../data/dbConfig');
 module.exports = {
     add,
     find,
+    get,
     findBy,
     findById,
-    remove
+    add,
+    remove,
+    update,
+    getUserScores
     
 }
 
@@ -13,13 +17,41 @@ function find() {
     return db('users').select('id', 'username', 'password', 'email', 'firstName', 'lastName', 'avatar')
 }
 
+function get() {
+    !id
+      ? db("users")
+          .limit(lim)
+          .offset(off)
+      : db("users")
+          .where({ id })
+          .first();
+}
+
+function getUserScores(id) {
+    return db  
+            .select(
+                'l.score',
+                'l.user_id',
+                'l.id',
+                'u.email',
+                'u.name',
+                'l.created_at'
+                 )       
+            .from('leaderboard as l')
+            .join('users as u', 'l.player_id', 'u.id')
+            .where('u.id', id)
+            .orderBy('score', 'desc');
+                
+}
 function findBy(filter) {
     return db('users')
         .where(filter)
 }
 
-async function add(user) {
-    const [id] = await db('users').insert(user)
+function add(user) {
+   db('users').insert(user)
+   .returning('id')
+        .then(([id]) => get(id))
 
     return findById(id)
 }
@@ -31,23 +63,24 @@ function findById(id) {
         .first();
 }
 
-async function remove(id) {
-    const [id] = await db('users').delete(user)
-
-    return findById(id)
+function update(id, changes) {
+  db('users')
+    .where({ id })
+    .update(changes)
+    .then(count => (count > 0 ? get(id) : null));
 }
 
-// //need fuctionality for the 4 models below
-
-
-// function getAllUsers() {
-
-// }
-
-// function getSingleUser() {
-//     return db('users').where()
-// }
-
-// function getAllAdmins() {}
-
-// function getSingleAdmin() {}
+ async function remove(id){
+  try {
+    const user = await get(id);
+    if (user) {
+      await db('users')
+        .where({ id })
+        .del();
+      return user;
+    }
+    return null;
+  } catch (error) {
+    return null;
+  }
+};
