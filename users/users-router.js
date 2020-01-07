@@ -3,21 +3,47 @@ const bcrypt = require('bcrypt');
 
 const {restricted, genToken} = require('../middleware/restricted-middleware');
 
+const {
+    validateBody,
+    validateLoginBody,
+    validateBodyOR
+} = require('./users.middleware');
+
 const Users = require('./users-model');
 
-//get logged in user info
-router.get('/logged', restricted, (req, res) => {
-    Users.find()
-        .then(users => {
-            res.status(200).json(users)
-        })
-        .catch(err => {
-            res.status(500).json({message: "There was an error fetching logged in users", err})
-        })
 
 
+//get list of users
+
+router.get('/', async (req, res) => {
+    const {page, limit} = req.query;
+
+    try {
+        const users = await Users.get(undefined, limit, (page - 1) * limit );
+        res.status(200).json(players);
+    }
+    catch (err) {
+        res.status(500).json({message: "Couldn't retrieve list of users"})
+    }
 })
 
+//get single User By ID
+
+router.get('/user/:id', validateBody, restricted, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const user = await Users.get(id);
+      if (user) {
+        res.status(200).json(user);
+      } else {
+        res.status(404).json({
+          message: "No user with the specified id id"
+        });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Couldn't retrieve the user with the specified id." });
+    }
+})
 //register user
 
 router.post("/register", (req, res) => {
@@ -50,7 +76,8 @@ router.post("/register", (req, res) => {
 
 });
 
-router.get("/login", (req, res) => {
+//get logged in users 
+router.get("/login", validateLoginBody, restricted, (req, res) => {
     Users.find()
         .then(users => {
             res.status(200).json(users)
@@ -59,7 +86,26 @@ router.get("/login", (req, res) => {
             res.status(500).json({message: "There was an error fetching logged in users", err})
         })
 });
+//get users test scores
+router.get("/:id/scores", restricted, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const scores = await Users.getPlayerScores(id);
+    if (scores[0]) {
+      res.status(200).json(scores);
+    } else {
+      res.status(404).json({
+        message: "No scores for user with that id"
+      });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Couldn't retrieve the scores for the user" });
+  }
+});
 
+//log in a user
 router.post("/login", (req, res) => {
      // login
 
@@ -93,61 +139,38 @@ router.post("/login", (req, res) => {
 
 
 
-// router.put("/editUser/:id", restricted, async, (req, res) => {
-//     const { body } = req
-//     const { id } = req.params
 
-//     if(body.password) {
-//         const hash = bcyrpt.hashSync(body.password, 12)
-//         body.password = hash;
-//     }
-
-//      if(body.role === 'user') {
-//         if( body.firstName.length === 0 || body.lastName.length === 0 ) {
-//             res.status(400).json({message: 'Please make sure all the required fields are provided!'})
-//          } 
-//         else {
-//             try {
-//                 const editedUser = await Users.editUser(body, id)
-//                 console.log(editedUser, 'user')
-//                 !editedUser ? res.status(404).json({message: editedUser}) : res.status(200).json(editedUser)
-//             } catch(err) {
-//                 res.status(500).json({message: 'Something went wrong with the server!'})
-//                  }
-//             }
-        
-//         else if(body.role === 'admin') {
-//             if(body.firstName.length === 0 ||body.lastName.length === 0) {
-//                  res.status(400).json({message: 'Please make sure all the required fields are provided!'})
-//             } 
-//         else {
-//             try {
-//                 const editedUser = await Users.editUser(body, id)
-//                 !editedUser ? res.status(404).json({message: editedUser}) : res.status(200).json(editedUser)
-//             } catch(err) {
-//                 res.status(500).json({message: 'Something went wrong with the server!'})
-//                 }
-//             }
-//         }
-//      }
-//  }) 
-
-
-router.delete("/:id", (req, res) => {
-    const id = req.params.id;
-
-    if(!id) {
-        return res.status(404).json({message: "The user with the specified id doesn't exist!"})
+router.put("/:id", validateBodyOR, restricted, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await Users.update(id, req.body);
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({
+        message: "No user located with the matching id"
+      });
     }
-    else {
-        Users.remove(id)
-            .then(count => {
-                return res.status(200).json({message: `The user with the id of ${id} has been successfully deleted`})
-            })
-            .catch(err => {
-                return res.status(500).json({message: `Server error: User Id ${id} could not be deleted.`})
-            })
+  } catch (error) {
+    res.status(500).json({ message: "Couldn't update the user" });
+  }
+});
+
+
+router.delete("/:id", restricted, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await Users.remove(id);
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({
+        message: "No user with that id"
+      });
     }
+  } catch (error) {
+    res.status(500).json({ message: "Couldn't delete the user" });
+  }
 });
 
 router.get('/users', restricted, async (req, res) => {
@@ -162,21 +185,8 @@ router.get('/users', restricted, async (req, res) => {
     
 })
 
-//Single User By ID
 
-router.get('/user/:id', restricted, async (req, res) => {
-    const { id } = req.params
-    console.log(req.params)
-
-    try {
-        const user = await Users.getSingleUser(id)
-
-        !user.id ? res.status(404).json({message: user}) : res.status(200).json(user)
-    } catch(err) {
-        res.status(500).json({message: 'Something went wrong with the server!'})
-    }
-})
-
+//get All Admins
 router.get('/admin', restricted, async (req, res) => {
 
     try {

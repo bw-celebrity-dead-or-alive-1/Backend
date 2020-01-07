@@ -9,7 +9,9 @@ module.exports = {
     add,
     remove,
     update,
-    getUserScores
+    getUserScores,
+    getAllAdmins,
+    getSingleAdmin
     
 }
 
@@ -46,6 +48,21 @@ function getUserScores(id) {
 function findBy(filter) {
     return db('users')
         .where(filter)
+}
+
+
+function getAllAdmins(filter) {
+   db("users").select('id', 'username', 'role')
+    .where({role} === 'admin')
+
+    return filter
+}
+
+function getSingleAdmin(id) {
+  return db("users")
+    .select("id", "username")
+    .where({ id } && ({role} === "admin"))
+    .first();
 }
 
 function add(user) {
