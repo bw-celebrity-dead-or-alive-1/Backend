@@ -92,16 +92,33 @@ router.post("/login", (req, res) => {
 //NEED PUT AND DELETES FOR USER PROFILE!! EON 0 END OF NIGHT :)
 
 
-// router.put("/editProfile/:id", (req, res) => {
-//     const {body} = req;
-//     const {id} = req.params;
+router.put("/:id", (req, res) => {
+    const {body} = req;
+    const {id} = req.params;
 
-//     if(body.password) {
-//         const hash = bcyrpt.hashSync(body.password, 12)
-//         body.password = hash;
-//     }
-// });
-// router.delete("/deleteProfile/:id", (req, res) => {});
+    if(body.password) {
+        const hash = bcyrpt.hashSync(body.password, 12)
+        body.password = hash;
+    }
+});
+
+
+router.delete("/:id", (req, res) => {
+    const id = req.params.id;
+
+    if(!id) {
+        return res.status(404).json({message: "The user with the specified id doesn't exist!"})
+    }
+    else {
+        Users.remove(id)
+            .then(count => {
+                return res.status(200).json({message: `The user with the id of ${id} has been successfully deleted`})
+            })
+            .catch(err => {
+                return res.status(500).json({message: `Server error: User Id ${id} could not be deleted.`})
+            })
+    }
+});
 
 
 function genToken(user) {
@@ -114,6 +131,8 @@ function genToken(user) {
 
   return token;
 }
+
+
 
 
 module.exports = router
