@@ -3,13 +3,16 @@ const express = require('express');
 const userRouter = require('./users/users-router');
 const celebrityRouter = require('./celebrity/celebrity-router');
 
-const configMiddleware = require('./config/configure-middleware');
+const configMiddleware = require('./middleware/configure-middleware');
 
 const server = express();
 
 configMiddleware(server);
 
-server.use('/users', userRouter);
+
+//users is blank so the endpoint can be /register or /login
+server.use('/', userRouter);
+
 server.use('/celebrities', celebrityRouter);
 
 server.get('/', (req, res) => {
