@@ -2,22 +2,26 @@ const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const secrets = require('../auth/secret');
+// const secrets = require('../auth/secret');
+
+const {restricted, genToken} = require('../middleware/restricted-middleware');
 
 const Users = require('./users-model');
 
 //get logged in user info
-router.get('/register', (req, res) => {
+router.get('/logged', restricted, (req, res) => {
     Users.find()
         .then(users => {
             res.status(200).json(users)
         })
         .catch(err => {
-            res.status(500).json({message: "There was an error fetching registered users", err})
+            res.status(500).json({message: "There was an error fetching logged in users", err})
         })
 
 
 })
+
+//register user
 
 router.post("/register", (req, res) => {
     //post method for login credentials
@@ -89,18 +93,42 @@ router.post("/login", (req, res) => {
 
 });
 
-//NEED PUT AND DELETES FOR USER PROFILE!! EON 0 END OF NIGHT :)
 
 
-router.put("/:id", (req, res) => {
-    const {body} = req;
-    const {id} = req.params;
+router.put("/editUser/:id, (req, res) => {
+    const {body} = req
+    const {id} = req.params
 
     if(body.password) {
         const hash = bcyrpt.hashSync(body.password, 12)
         body.password = hash;
     }
-});
+
+     if(body.role === 'user') {
+        if( body.firstName.length === 0 || body.lastName.length === 0 ) {
+            res.status(400).json({message: 'Please make sure all the required fields are provided!'})
+        } else {
+            try {
+                const editedUser = await Users.editUser(body, id)
+                console.log(editedUser, 'user')
+                !editedUser ? res.status(404).json({message: editedUser}) : res.status(200).json(editedUser)
+            } catch(err) {
+                res.status(500).json({message: 'Something went wrong with the server!'})
+            }
+        }
+    } else if(body.role === 'admin') {
+        if(body.firstName.length === 0 ||body.lastName.length === 0) {
+            res.status(400).json({message: 'Please make sure all the required fields are provided!'})
+        } else {
+            try {
+                const editedUser = await Users.editUser(body, id)
+                !editedUser ? res.status(404).json({message: editedUser}) : res.status(200).json(editedUser)
+            } catch(err) {
+                res.status(500).json({message: 'Something went wrong with the server!'})
+            }
+        }
+    }
+})
 
 
 router.delete("/:id", (req, res) => {
@@ -120,17 +148,60 @@ router.delete("/:id", (req, res) => {
     }
 });
 
+router.get('/users', restricted, async (req, res) => {
 
-function genToken(user) {
-  const payload = {
-    username: user.username
-  };
+    try {
+        const users = await Users.getAllUsers()
 
-  const options = { expiresIn: "1hr" };
-  const token = jwt.sign(payload, secrets.jwtSecret, options);
+        res.status(200).json(users)
+    } catch(err) {
+        res.status(500).json({ message: 'Something went wrong with the server!'})
+    }
+    
+})
 
-  return token;
-}
+//Single User By ID
+
+router.get('/user/:id', restricted, async (req, res) => {
+    const { id } = req.params
+    console.log(req.params)
+
+    try {
+        const user = await Users.getSingleUser(id)
+
+        !user.id ? res.status(404).json({message: user}) : res.status(200).json(user)
+    } catch(err) {
+        res.status(500).json({message: 'Something went wrong with the server!'})
+    }
+})
+
+router.get('/admin', restricted, async (req, res) => {
+
+    try {
+        const admins = await Users.getAllAdmins()
+
+        res.status(200).json(admins)
+    } catch {
+        res.status(500).json({ message: 'Something went wrong with the server!'})
+    }
+    
+})
+
+//Single Admin By ID
+
+router.get('/admin/:id', restricted, async (req, res) => {
+    const { id } = req.params
+    console.log(req.params)
+
+    try {
+        const admin = await Users.getSingleAdmin(id)
+
+        !admin.id ? res.status(404).json({message: admin}) : res.status(200).json(admin)
+    } catch(err) {
+        res.status(500).json({message: 'Something went wrong with the server!'})
+    }
+})
+
 
 
 
