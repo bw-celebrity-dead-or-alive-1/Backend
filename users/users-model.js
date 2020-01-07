@@ -1,15 +1,11 @@
 const db = require('../data/dbConfig');
 
 module.exports = {
-    logged,
     add,
     find,
     findBy,
     findById,
-    getAllUsers,
-    getSingleUser,
-    getAllAdmins,
-    getSingleAdmin
+    
 }
 
 function find() {
@@ -34,16 +30,15 @@ function findById(id) {
         .first();
 }
 
-//need fuctionality for the 5 models below
+// //need fuctionality for the 4 models below
 
-function logged() {}
 
-function getAllUsers() {
+// function getAllUsers() {
 
-}
+// }
 
-function getSingleUser() {}
+// function getSingleUser() {}
 
-function getAllAdmins() {}
+// function getAllAdmins() {}
 
-function getSingleAdmin() {}
+// function getSingleAdmin() {}

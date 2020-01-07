@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 
 // const secrets = require('../auth/secret');
 
@@ -62,6 +62,7 @@ router.get("/login", (req, res) => {
             res.status(500).json({message: "There was an error fetching logged in users", err})
         })
 });
+
 router.post("/login", (req, res) => {
      // login
 
@@ -95,112 +96,116 @@ router.post("/login", (req, res) => {
 
 
 
-router.put("/editUser/:id, (req, res) => {
-    const {body} = req
-    const {id} = req.params
+// router.put("/editUser/:id", restricted, async, (req, res) => {
+//     const { body } = req
+//     const { id } = req.params
 
-    if(body.password) {
-        const hash = bcyrpt.hashSync(body.password, 12)
-        body.password = hash;
-    }
+//     if(body.password) {
+//         const hash = bcyrpt.hashSync(body.password, 12)
+//         body.password = hash;
+//     }
 
-     if(body.role === 'user') {
-        if( body.firstName.length === 0 || body.lastName.length === 0 ) {
-            res.status(400).json({message: 'Please make sure all the required fields are provided!'})
-        } else {
-            try {
-                const editedUser = await Users.editUser(body, id)
-                console.log(editedUser, 'user')
-                !editedUser ? res.status(404).json({message: editedUser}) : res.status(200).json(editedUser)
-            } catch(err) {
-                res.status(500).json({message: 'Something went wrong with the server!'})
-            }
-        }
-    } else if(body.role === 'admin') {
-        if(body.firstName.length === 0 ||body.lastName.length === 0) {
-            res.status(400).json({message: 'Please make sure all the required fields are provided!'})
-        } else {
-            try {
-                const editedUser = await Users.editUser(body, id)
-                !editedUser ? res.status(404).json({message: editedUser}) : res.status(200).json(editedUser)
-            } catch(err) {
-                res.status(500).json({message: 'Something went wrong with the server!'})
-            }
-        }
-    }
-})
+//      if(body.role === 'user') {
+//         if( body.firstName.length === 0 || body.lastName.length === 0 ) {
+//             res.status(400).json({message: 'Please make sure all the required fields are provided!'})
+//          } 
+//         else {
+//             try {
+//                 const editedUser = await Users.editUser(body, id)
+//                 console.log(editedUser, 'user')
+//                 !editedUser ? res.status(404).json({message: editedUser}) : res.status(200).json(editedUser)
+//             } catch(err) {
+//                 res.status(500).json({message: 'Something went wrong with the server!'})
+//                  }
+//             }
+        
+//         else if(body.role === 'admin') {
+//             if(body.firstName.length === 0 ||body.lastName.length === 0) {
+//                  res.status(400).json({message: 'Please make sure all the required fields are provided!'})
+//             } 
+//         else {
+//             try {
+//                 const editedUser = await Users.editUser(body, id)
+//                 !editedUser ? res.status(404).json({message: editedUser}) : res.status(200).json(editedUser)
+//             } catch(err) {
+//                 res.status(500).json({message: 'Something went wrong with the server!'})
+//                 }
+//             }
+//         }
+//      }
+//  }) 
 
 
-router.delete("/:id", (req, res) => {
-    const id = req.params.id;
+// router.delete("/:id", (req, res) => {
+//     const id = req.params.id;
 
-    if(!id) {
-        return res.status(404).json({message: "The user with the specified id doesn't exist!"})
-    }
-    else {
-        Users.remove(id)
-            .then(count => {
-                return res.status(200).json({message: `The user with the id of ${id} has been successfully deleted`})
-            })
-            .catch(err => {
-                return res.status(500).json({message: `Server error: User Id ${id} could not be deleted.`})
-            })
-    }
-});
+//     if(!id) {
+//         return res.status(404).json({message: "The user with the specified id doesn't exist!"})
+//     }
+//     else {
+//         Users.remove(id)
+//             .then(count => {
+//                 return res.status(200).json({message: `The user with the id of ${id} has been successfully deleted`})
+//             })
+//             .catch(err => {
+//                 return res.status(500).json({message: `Server error: User Id ${id} could not be deleted.`})
+//             })
+//     }
+// });
 
-router.get('/users', restricted, async (req, res) => {
+// router.get('/users', restricted, async (req, res) => {
 
-    try {
-        const users = await Users.getAllUsers()
+//     try {
+//         const users = await Users.getAllUsers()
 
-        res.status(200).json(users)
-    } catch(err) {
-        res.status(500).json({ message: 'Something went wrong with the server!'})
-    }
+//         res.status(200).json(users)
+//     } catch(err) {
+//         res.status(500).json({ message: 'Something went wrong with the server!'})
+//     }
     
-})
+// })
 
-//Single User By ID
+// //Single User By ID
 
-router.get('/user/:id', restricted, async (req, res) => {
-    const { id } = req.params
-    console.log(req.params)
+// router.get('/user/:id', restricted, async (req, res) => {
+//     const { id } = req.params
+//     console.log(req.params)
 
-    try {
-        const user = await Users.getSingleUser(id)
+//     try {
+//         const user = await Users.getSingleUser(id)
 
-        !user.id ? res.status(404).json({message: user}) : res.status(200).json(user)
-    } catch(err) {
-        res.status(500).json({message: 'Something went wrong with the server!'})
-    }
-})
+//         !user.id ? res.status(404).json({message: user}) : res.status(200).json(user)
+//     } catch(err) {
+//         res.status(500).json({message: 'Something went wrong with the server!'})
+//     }
+// })
 
-router.get('/admin', restricted, async (req, res) => {
+// router.get('/admin', restricted, async (req, res) => {
 
-    try {
-        const admins = await Users.getAllAdmins()
+//     try {
+//         const admins = await Users.getAllAdmins()
 
-        res.status(200).json(admins)
-    } catch {
-        res.status(500).json({ message: 'Something went wrong with the server!'})
-    }
+//         res.status(200).json(admins)
+//     } catch {
+//         res.status(500).json({ message: 'Something went wrong with the server!'})
+//     }
     
-})
+// })
 
-//Single Admin By ID
+// //Single Admin By ID
 
-router.get('/admin/:id', restricted, async (req, res) => {
-    const { id } = req.params
-    console.log(req.params)
+// router.get('/admin/:id', restricted, async (req, res) => {
+//     const { id } = req.params
+//     console.log(req.params)
 
-    try {
-        const admin = await Users.getSingleAdmin(id)
+//     try {
+//         const admin = await Users.getSingleAdmin(id)
 
-        !admin.id ? res.status(404).json({message: admin}) : res.status(200).json(admin)
-    } catch(err) {
-        res.status(500).json({message: 'Something went wrong with the server!'})
-    }
-})
+//         !admin.id ? res.status(404).json({message: admin}) : res.status(200).json(admin)
+//     } catch(err) {
+//         res.status(500).json({message: 'Something went wrong with the server!'})
+//     }
+// })
 
 
 
