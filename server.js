@@ -10,7 +10,7 @@ const server = express();
 configMiddleware(server);
 
 server.use('/users', userRouter);
-server.use('/celebrities', authenicate, celebrityRouter);
+server.use('/celebrities', celebrityRouter);
 
 server.get('/', (req, res) => {
     res.json({ api: "API is working. Celebrities will Shine like Stars Here, Unless Extinguished Already!" })

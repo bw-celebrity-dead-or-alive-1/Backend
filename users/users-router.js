@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const bcrypt = require('bcyrptjs');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const secrets = require('../auth/secret');
@@ -44,7 +44,7 @@ router.post("/register", (req, res) => {
                 res.status(500).json({message: "Error Creating User in the Database", err})
             })
     }   else {
-        res.status(400).json({"Registration Error!"})
+        res.status(400).json("Registration Error!")
     }
 
 });
