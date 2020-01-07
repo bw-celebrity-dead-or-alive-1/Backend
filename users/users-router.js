@@ -38,7 +38,7 @@ router.post("/register", (req, res) => {
 
         user.password = hash;
 
-        Users.add(uesr)
+        Users.add(user)
             .then(saved => {
                 const token = genToken(saved)
                 //same as token: token
@@ -136,76 +136,76 @@ router.post("/login", (req, res) => {
 //  }) 
 
 
-// router.delete("/:id", (req, res) => {
-//     const id = req.params.id;
+router.delete("/:id", (req, res) => {
+    const id = req.params.id;
 
-//     if(!id) {
-//         return res.status(404).json({message: "The user with the specified id doesn't exist!"})
-//     }
-//     else {
-//         Users.remove(id)
-//             .then(count => {
-//                 return res.status(200).json({message: `The user with the id of ${id} has been successfully deleted`})
-//             })
-//             .catch(err => {
-//                 return res.status(500).json({message: `Server error: User Id ${id} could not be deleted.`})
-//             })
-//     }
-// });
+    if(!id) {
+        return res.status(404).json({message: "The user with the specified id doesn't exist!"})
+    }
+    else {
+        Users.remove(id)
+            .then(count => {
+                return res.status(200).json({message: `The user with the id of ${id} has been successfully deleted`})
+            })
+            .catch(err => {
+                return res.status(500).json({message: `Server error: User Id ${id} could not be deleted.`})
+            })
+    }
+});
 
-// router.get('/users', restricted, async (req, res) => {
+router.get('/users', restricted, async (req, res) => {
 
-//     try {
-//         const users = await Users.getAllUsers()
+    try {
+        const users = await Users.getAllUsers()
 
-//         res.status(200).json(users)
-//     } catch(err) {
-//         res.status(500).json({ message: 'Something went wrong with the server!'})
-//     }
+        res.status(200).json(users)
+    } catch(err) {
+        res.status(500).json({ message: 'Something went wrong with the server!'})
+    }
     
-// })
+})
 
-// //Single User By ID
+//Single User By ID
 
-// router.get('/user/:id', restricted, async (req, res) => {
-//     const { id } = req.params
-//     console.log(req.params)
+router.get('/user/:id', restricted, async (req, res) => {
+    const { id } = req.params
+    console.log(req.params)
 
-//     try {
-//         const user = await Users.getSingleUser(id)
+    try {
+        const user = await Users.getSingleUser(id)
 
-//         !user.id ? res.status(404).json({message: user}) : res.status(200).json(user)
-//     } catch(err) {
-//         res.status(500).json({message: 'Something went wrong with the server!'})
-//     }
-// })
+        !user.id ? res.status(404).json({message: user}) : res.status(200).json(user)
+    } catch(err) {
+        res.status(500).json({message: 'Something went wrong with the server!'})
+    }
+})
 
-// router.get('/admin', restricted, async (req, res) => {
+router.get('/admin', restricted, async (req, res) => {
 
-//     try {
-//         const admins = await Users.getAllAdmins()
+    try {
+        const admins = await Users.getAllAdmins()
 
-//         res.status(200).json(admins)
-//     } catch {
-//         res.status(500).json({ message: 'Something went wrong with the server!'})
-//     }
+        res.status(200).json(admins)
+    } catch {
+        res.status(500).json({ message: 'Something went wrong with the server!'})
+    }
     
-// })
+})
 
-// //Single Admin By ID
+//Single Admin By ID
 
-// router.get('/admin/:id', restricted, async (req, res) => {
-//     const { id } = req.params
-//     console.log(req.params)
+router.get('/admin/:id', restricted, async (req, res) => {
+    const { id } = req.params
+    console.log(req.params)
 
-//     try {
-//         const admin = await Users.getSingleAdmin(id)
+    try {
+        const admin = await Users.getSingleAdmin(id)
 
-//         !admin.id ? res.status(404).json({message: admin}) : res.status(200).json(admin)
-//     } catch(err) {
-//         res.status(500).json({message: 'Something went wrong with the server!'})
-//     }
-// })
+        !admin.id ? res.status(404).json({message: admin}) : res.status(200).json(admin)
+    } catch(err) {
+        res.status(500).json({message: 'Something went wrong with the server!'})
+    }
+})
 
 
 

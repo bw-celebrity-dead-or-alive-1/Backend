@@ -5,6 +5,7 @@ module.exports = {
     find,
     findBy,
     findById,
+    remove
     
 }
 
@@ -30,6 +31,12 @@ function findById(id) {
         .first();
 }
 
+async function remove(id) {
+    const [id] = await db('users').delete(user)
+
+    return findById(id)
+}
+
 // //need fuctionality for the 4 models below
 
 
@@ -37,7 +44,9 @@ function findById(id) {
 
 // }
 
-// function getSingleUser() {}
+// function getSingleUser() {
+//     return db('users').where()
+// }
 
 // function getAllAdmins() {}
 
