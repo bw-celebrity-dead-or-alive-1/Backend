@@ -42,7 +42,7 @@ function restricted(req, res, next) {
         })
     }
     else {
-        req.status(401).json({ message: "invalid token or no token provided" })
+        res.status(401).json({ message: "invalid token or no token provided" })
     }
 
 

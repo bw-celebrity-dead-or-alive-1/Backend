@@ -2,6 +2,7 @@ const express = require('express');
 
 const userRouter = require('./users/users-router');
 const celebrityRouter = require('./celebrity/celebrity-router');
+const scoreRouter = require("./scores/scores-router");
 
 const configMiddleware = require('./middleware/configure-middleware');
 
@@ -14,6 +15,9 @@ configMiddleware(server);
 server.use('/users', userRouter);
 
 server.use('/celebrities', celebrityRouter);
+
+server.use("/scores", scoreRouter);
+
 
 server.get('/', (req, res) => {
     res.json({ api: "API is working. Celebrities will Shine like Stars Here, Unless Extinguished Already!" })

@@ -15,24 +15,24 @@ const Users = require('./users-model');
 
 //get list of users
 
-router.get('/', async (req, res) => {
-    const {page, limit} = req.query;
+// router.get('/users', async (req, res) => {
+//     const {page, limit} = req.query;
 
-    try {
-        const users = await Users.get(undefined, limit, (page - 1) * limit );
-        res.status(200).json(players);
-    }
-    catch (err) {
-        res.status(500).json({message: "Couldn't retrieve list of users"})
-    }
-})
+//     try {
+//         const users = await Users.get(undefined, limit, (page - 1) * limit );
+//         res.status(200).json(players);
+//     }
+//     catch (err) {
+//         res.status(500).json({message: "Couldn't retrieve list of users"})
+//     }
+// })
 
-//get single User By ID
+//get single User By ID - NOT WORKING
 
-router.get('/user/:id', validateBody, restricted, async (req, res) => {
+router.get('/user/:id', async (req, res) => {
     try {
       const { id } = req.params;
-      const user = await Users.get(id);
+      const user = await Users.findById(id);
       if (user) {
         res.status(200).json(user);
       } else {
@@ -44,7 +44,7 @@ router.get('/user/:id', validateBody, restricted, async (req, res) => {
       res.status(500).json({ message: "Couldn't retrieve the user with the specified id." });
     }
 })
-//register user
+//register user -working
 
 router.post("/register", (req, res) => {
     //post method for login credentials
@@ -76,8 +76,8 @@ router.post("/register", (req, res) => {
 
 });
 
-//get logged in users 
-router.get("/login", validateLoginBody, restricted, (req, res) => {
+//get all users - working
+router.get("/users", validateLoginBody, (req, res) => {
     Users.find()
         .then(users => {
             res.status(200).json(users)
@@ -99,13 +99,12 @@ router.get("/:id/scores", restricted, async (req, res) => {
       });
     }
   } catch (error) {
-    res
-      .status(500)
+    res.status(500)
       .json({ message: "Couldn't retrieve the scores for the user" });
   }
 });
 
-//log in a user
+//log in a user - working
 router.post("/login", (req, res) => {
      // login
 
@@ -173,21 +172,22 @@ router.delete("/:id", restricted, async (req, res) => {
   }
 });
 
-router.get('/users', restricted, async (req, res) => {
+//get all users - WORKING
+// router.get('/users', async (req, res) => {
 
-    try {
-        const users = await Users.getAllUsers()
+//     try {
+//         const users = await Users.getAllUsers()
 
-        res.status(200).json(users)
-    } catch(err) {
-        res.status(500).json({ message: 'Something went wrong with the server!'})
-    }
+//         res.status(200).json(users)
+//     } catch(err) {
+//         res.status(500).json({ message: 'Something went wrong with the server!'})
+//     }
     
-})
+// })
 
 
-//get All Admins
-router.get('/admin', restricted, async (req, res) => {
+//get All Admins - NOT WORKING
+router.get('/admin', async (req, res) => {
 
     try {
         const admins = await Users.getAllAdmins()
