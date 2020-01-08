@@ -32,15 +32,15 @@ function get() {
 function getUserScores(id) {
     return db  
             .select(
-                'l.score',
-                'l.user_id',
-                'l.id',
+                's.score',
+                's.user_id',
+                's.id',
                 'u.email',
                 'u.name',
-                'l.created_at'
+                's.created_at'
                  )       
-            .from('leaderboard as l')
-            .join('users as u', 'l.player_id', 'u.id')
+            .from('scores as s')
+            .join('users as u', 's.user_id', 'u.id')
             .where('u.id', id)
             .orderBy('score', 'desc');
                 
