@@ -11,7 +11,7 @@ const {
 
 const Users = require('./users-model');
 
-
+//update all routes with /users :)
 
 //get list of users
 

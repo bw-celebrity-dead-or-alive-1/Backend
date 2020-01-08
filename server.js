@@ -11,7 +11,7 @@ configMiddleware(server);
 
 
 //users is blank so the endpoint can be /register or /login
-server.use('/', userRouter);
+server.use('/users', userRouter);
 
 server.use('/celebrities', celebrityRouter);
 
