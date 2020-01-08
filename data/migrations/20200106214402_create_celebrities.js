@@ -13,5 +13,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTableIfExists('celebs');
+  return knex.schema.dropTableIfExists('celebrities');
 };
