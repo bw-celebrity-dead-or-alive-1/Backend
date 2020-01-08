@@ -51,6 +51,7 @@ function findBy(filter) {
 }
 
 
+
 function getAllAdmins(filter) {
    db("users").select('id', 'username', 'role')
     .where({role} === 'admin')
@@ -66,11 +67,12 @@ function getSingleAdmin(id) {
 }
 
 function add(user) {
-   db('users').insert(user)
-   .returning('id')
-        .then(([id]) => get(id))
-
-    return findById(id)
+     return db("users")
+    .insert(user, "id")
+    .then(ids => {
+      const [id] = ids;
+      return findById(id); 
+    })
 }
 
 function findById(id) {

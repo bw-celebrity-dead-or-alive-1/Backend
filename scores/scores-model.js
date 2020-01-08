@@ -50,7 +50,7 @@ function getScore() {
 function create(score) {
   db("scores")
     .insert(score)
-    .returning("id")
+    // .returning("id")
     .then(([id]) => getScore(id));
 }
 
