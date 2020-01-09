@@ -26,7 +26,7 @@ function get(id) {
 
 }
 function paginate(lim = 20, off = 0) {
-  db.select(
+  return db('scores').select(
       "s.score",
       "s.user_id",
       "s.id",
@@ -42,20 +42,21 @@ function paginate(lim = 20, off = 0) {
 
 }
 
-function getScore() {
-  db("scores")
-    .where({ id })
-    .first();
+function getScore(user_id) {
+   return db("scores")
+     .select("user_id", "id", "score")
+     .where({ user_id })
+     .first();
 }
 function create(score) {
-  db("scores")
-    .insert(score)
+  return db("scores")
+    .insert(score).where({id}).first
     // .returning("id")
     .then(([id]) => getScore(id));
 }
 
 function update(id, changes) {
-  db("scores")
+  return db("scores")
     .where({ id })
     .update(changes)
     .then(count => (count > 0 ? getScore(id) : null));
