@@ -54,9 +54,9 @@ router.get('/:id', async (req, res) => {
     }
 );
 
-//single celeb pic - returning all instead of image
+//random
 
-router.get('/pic/:id', async (req, res) => {
+router.get('/random', async (req, res) => {
     try {
         const {id} = req.params;
         const celeb = await celebrities.getCelebs({id});
