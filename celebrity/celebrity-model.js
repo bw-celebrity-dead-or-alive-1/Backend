@@ -51,14 +51,10 @@ function update(id, changes) {
         .then(count => (count > 0 ? getCelebs ({id}) : null));
 }
 
-async function remove(id) {
-    const celeb = await getCeleb({id});
-    if(celeb) {
-        await db('celebrities').where({id}).del();
-
-        return celeb
-    }
-    return null;
+function remove(id) {
+     return db("celebrities")
+       .where({ id })
+       .del();
 }
 
 function paginate(lim = 5, off = 0) {

@@ -104,7 +104,7 @@ router.put("/:id", validateCelebBodyUpdate, async (req, res) => {
 });
 
 //delete Celebrity
-router.delete("/:id", validateCelebs, restricted, async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const celeb = await celebrities.remove(id);
