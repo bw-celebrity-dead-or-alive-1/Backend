@@ -83,23 +83,15 @@ function findById(id) {
 }
 
 function update(id, changes) {
-  db('users')
+  return db('users')
     .where({ id })
     .update(changes)
     .then(count => (count > 0 ? get(id) : null));
 }
 
- async function remove(id){
-  try {
-    const user = await get(id);
-    if (user) {
-      await db('users')
+  function remove(id){
+    return db('users')
         .where({ id })
         .del();
-      return user;
     }
-    return null;
-  } catch (error) {
-    return null;
-  }
-};
+  

@@ -1,43 +1,53 @@
 const db = require("../data/dbConfig");
 
-function getCeleb() {
-  return db("celebs").then(celeb => {
+module.exports = {
+  getCelebs,
+  addCelebs,
+  allCelebs,
+  update,
+  remove,
+  paginate
+};
+
+
+function getCelebs() {
+  return db("celebrities").then(celeb => {
     let calculated = Math.random() * (celeb.length - 0);
     let rounded = Math.round(calculated);
 
-    return db("celebs")
+    return db("celebrities")
       .where({ id: rounded })
       .first()
       .then(celeb => {
         if (celeb.death > 0) {
           celeb.dead = true;
         } else if (celeb.death === 0) {
-                 celeb.dead = false;
-               }
+          celeb.dead = false;
+        }
         return celeb;
       });
   });
 }
 
 function allCelebs() {
-  return db("celebs").then(celeb => {
-    return celeb;
-  });
+  return db("celebrities");
+    
+  
 }
 
-function addCeleb(newCeleb) {
-  return db("celebs").insert(newCeleb, ["*"]);
+function addCelebs(newCeleb) {
+  return db("celebrities").insert(newCeleb, ["*"]);
 }
 
 function update(id, changes) {
-    return db('celebs').where({id}).update(changes)    
-        .then(count => (count > 0 ? getCeleb ({id}) : null));
+    return db('celebrities').where({id}).update(changes)    
+        .then(count => (count > 0 ? getCelebs ({id}) : null));
 }
 
-const remove  = async id => {
+async function remove(id) {
     const celeb = await getCeleb({id});
     if(celeb) {
-        await db('celebs').where({id}).del();
+        await db('celebrities').where({id}).del();
 
         return celeb
     }
@@ -45,17 +55,11 @@ const remove  = async id => {
 }
 
 function paginate(lim = 5, off = 0) {
-    db('celebs').limit(lim).offset(off);
+    db("celebrities")
+      .limit(lim)
+      .offset(off);
 }
 
 
 
 
-module.exports = {
-  getCeleb,
-  addCeleb,
-  allCelebs,
-  update,
-  remove,
-  paginate
-};

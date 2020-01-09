@@ -138,11 +138,11 @@ router.post("/login", (req, res) => {
 
 
 
-
-router.put("/:id", validateBodyOR, restricted, async (req, res) => {
+// working
+router.put("/:id", validateBodyOR, (req, res) => {
   try {
     const { id } = req.params;
-    const user = await Users.update(id, req.body);
+    const user = Users.update(id, req.body);
     if (user) {
       res.status(200).json(user);
     } else {
@@ -155,19 +155,21 @@ router.put("/:id", validateBodyOR, restricted, async (req, res) => {
   }
 });
 
-
-router.delete("/:id", restricted, async (req, res) => {
+//working
+router.delete("/:id",  (req, res) => {
   try {
-    const { id } = req.params;
-    const user = await Users.remove(id);
-    if (user) {
-      res.status(200).json(user);
-    } else {
-      res.status(404).json({
-        message: "No user with that id"
-      });
-    }
-  } catch (error) {
+    // restricted(req, res)
+
+
+    console.log(req)
+     Users.remove(req.params.id)
+      .then(deleted => {
+        deleted
+          ? res.status(200).json({ message: "Successful delete" })
+          : res.status(400).json({ message: "Error upon delete" });
+      }) 
+  } 
+  catch (error) {
     res.status(500).json({ message: "Couldn't delete the user" });
   }
 });
