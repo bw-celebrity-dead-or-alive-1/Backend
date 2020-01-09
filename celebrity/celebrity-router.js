@@ -10,32 +10,37 @@ const {
 const { restricted } = require("../middleware/restricted-middleware");
 
 //paginated celebs
-router.get("/", async (req, res) => {
+// router.get("/", async (req, res) => {
+//   try {
+//     const celeb = await celebrities.paginate(limit, (page - 1) * limit);
+//     res.status(200).json(celeb);
+//   } catch {
+//     res.status(500).json({ Message: "No celebrity list was found" });
+//   }
+// });
+
+ router.get("/", async (req, res) => {
+
   try {
-    const celeb = await celebrities.paginate(limit, (page - 1) * limit);
-    res.status(200).json(celeb);
-  } catch {
-    res.status(500).json({ Message: "No celebrity list was found" });
+   await celebrities.allCelebs()
+      .then(celebrities => {
+        console.log(celebrities)
+        res.status(200).json(celebrities);
+      })
+    
+  } catch (error) {
+    res.status(500).send(console.log(error) );
   }
 });
 
-//all celbs
 
-router.get("/all", async (req, res) => {
-  try {
-    const celebrities = await celebrities.allCelebs();
-    res.status(200).json(celebrities);
-  } catch {
-    res.status(500).json({ Message: "No celebrities were found" });
-  }
-});
 
 //single celeb
 
 router.get('/:id', async (req, res) => {
     try{
         const {id} = req.params;
-        const celeb = await celebrities.getCeleb({id});
+        const celeb = await celebrities.getCelebs({id});
 
         if (celeb) {
              res.status(200).json(celeb);
@@ -49,12 +54,12 @@ router.get('/:id', async (req, res) => {
     }
 );
 
-//single celeb pic
+//single celeb pic - returning all instead of image
 
 router.get('/pic/:id', async (req, res) => {
     try {
         const {id} = req.params;
-        const celeb = await celebrities.getCeleb({id});
+        const celeb = await celebrities.getCelebs({id});
 
         if (celeb) {
             res.status(200).json(celeb);
@@ -68,26 +73,33 @@ router.get('/pic/:id', async (req, res) => {
     }
 );
 
-//add new Celeb
+//add new Celeb - working
 router.post("/", validateCelebBody, async (req, res) => {
   const newCeleb = req.body;
 
   try {
-    const addCeleb = await celebrities.addCeleb(newCeleb);
-    res.status(201).json({ Message: "New Celebrity Added", addCeleb });
+    console.log(req.body)
+    await celebrities.addCelebs(newCeleb)
+      .then(celebs => {
+        res.status(201).json({ Message: "New Celebrity Added", celebs });
+      })
+    
   } catch (err) {
-    res.status(500).json({ Message: "Celebrity could not be added", err });
+    res.status(500).send((console.log(err)));
   }
 });
 
-//edit Celebrity
+//edit Celebrity - working
 router.put("/:id", validateCelebBodyUpdate, async (req, res) => {
   try {
-    const { id } = req.params;
-    const celeb = await celebrities.update(id, req.body);
-    res.status(200).json(celeb);
+    console.log(req)
+   await celebrities.update(req.params.id, req.body)
+      .then(celebs => {
+        res.status(200).json(celebs);
+      })
+    
   } catch (error) {
-    res.status(500).json({ message: "Couldn't update the celebrity" });
+    res.status(500).send(console.log(error));
   }
 });
 
