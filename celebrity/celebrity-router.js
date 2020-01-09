@@ -54,7 +54,7 @@ router.get('/:id', async (req, res) => {
     }
 );
 
-//random
+//random celeb - working
 
 router.get('/random', async (req, res) => {
     try {
@@ -103,7 +103,7 @@ router.put("/:id", validateCelebBodyUpdate, async (req, res) => {
   }
 });
 
-//delete Celebrity
+//delete Celebrity - workin
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
