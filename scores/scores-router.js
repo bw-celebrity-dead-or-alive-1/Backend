@@ -37,6 +37,8 @@ router.get("/", async (req, res) => {
 //    }
 //  });
 
+
+//working - single score for a user
 router.get("/:id", async (req, res) => {
   try {
 
