@@ -42,10 +42,10 @@ function paginate(lim = 20, off = 0) {
 
 }
 
-function getScore(id) {
+function getScore(user_id) {
    return db("scores")
-     .select("", "scores")
-     .where({ id })
+     .select("user_id", "id", "score")
+     .where({ user_id })
      .first();
 }
 function create(score) {
