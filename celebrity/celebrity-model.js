@@ -4,6 +4,7 @@ module.exports = {
   getCelebs,
   addCelebs,
   allCelebs,
+  findPic,
   update,
   remove,
   paginate
@@ -31,8 +32,14 @@ function getCelebs() {
 
 function allCelebs() {
   return db("celebrities");
-    
   
+}
+
+function findPic(id) {
+  return db("users")
+    .select("id", "image_url")
+    .where({ id })
+    .first();
 }
 
 function addCelebs(newCeleb) {
