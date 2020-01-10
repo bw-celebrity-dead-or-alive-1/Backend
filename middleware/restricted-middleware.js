@@ -27,6 +27,8 @@ function restricted(req, res, next) {
 
     const token = req.headers.authorization;
 
+    console.log(req.headers);
+
      if (req.decodedJwt) {
        next();
      } else if (token) {
