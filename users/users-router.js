@@ -29,7 +29,7 @@ const Users = require('./users-model');
 
 //get single User By ID - NOT WORKING
 
-router.get('/user/:id', async (req, res) => {
+router.get('/user/:id', restricted, async (req, res) => {
     try {
       const { id } = req.params;
       const user = await Users.findById(id);
@@ -77,7 +77,7 @@ router.post("/register", (req, res) => {
 });
 
 //get all users - working
-router.get("/users", validateLoginBody, (req, res) => {
+router.get("/users", validateLoginBody, restricted, (req, res) => {
     Users.find()
         .then(users => {
             res.status(200).json(users)
@@ -139,7 +139,7 @@ router.post("/login", (req, res) => {
 
 
 // working
-router.put("/:id", validateBodyOR, (req, res) => {
+router.put("/:id", validateBodyOR, restricted, (req, res) => {
   try {
     const { id } = req.params;
     const user = Users.update(id, req.body);
@@ -156,7 +156,7 @@ router.put("/:id", validateBodyOR, (req, res) => {
 });
 
 //working
-router.delete("/:id",  (req, res) => {
+router.delete("/:id", restricted, (req, res) => {
   try {
     // restricted(req, res)
 
@@ -188,8 +188,8 @@ router.delete("/:id",  (req, res) => {
 // })
 
 
-//get All Admins - NOT WORKING
-router.get('/admin', async (req, res) => {
+//get All Admins 
+router.get('/admin', restricted, async (req, res) => {
 
     try {
         const admins = await Users.getAllAdmins()
