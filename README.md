@@ -18,67 +18,74 @@ Backend Application for Celebridead
   * **[POST]** * to `/users/login`: returns a token to be added to the header of all other requests. Pass in the following credentials as the `body` of the request: `{ username: 'Lambda School', password: 'i<3Lambd4' }`
   * **[GET]** to `/users/:id`: returns the single user.
   * **[GET]** to `/users/`: returns the All users.
-  * **[GET]** to `/:id/scores`: returns the score for the specified user.
+  * **[GET]** to `/users/:id/scores`: returns the score for the specified user.
   * **[POST]** to `/users/register`: creates a user and return the new user has been successfully created message. 
-  * **[PUT]** to `/:id`: updates the user using the `id` passed as part of the URL. Send the an object with the updated information as the `body` of the request (the second argument passed to `axios.put`).
-  * **[DELETE]** to `/id`: removes the user using the `id` passed as part of the URL.
+  * **[PUT]** to `/users/:id`: updates the user using the `id` passed as part of the URL. Send the an object with the updated information as the `body` of the request (the second argument passed to `axios.put`).
+  * **[DELETE]** to `/users/:id`: removes the user using the `id` passed as part of the URL.
 
   # CELEBRITIES
 
-  * **[POST]** * to `/users/login`: returns a token to be added to the header of all other requests. Pass in the following credentials as the `body` of the request: `{ username: 'Lambda School', password: 'i<3Lambd4' }`
-  * **[GET]** to `/users/:id`: returns the single user.
-  * **[GET]** to `/users/`: returns the All users.
-  * **[GET]** to `/:id/scores`: returns the score for the specified user.
-  * **[POST]** to `/users/register`: creates a user and return the new user has been successfully created message. 
-  * **[PUT]** to `/:id`: updates the user using the `id` passed as part of the URL. Send the an object with the updated information as the `body` of the request (the second argument passed to `axios.put`).
-  * **[DELETE]** to `/id`: removes the user using the `id` passed as part of the URL.
+  * **[POST]** * to `/celebrities`: Allows a new celebrity to be added to the database.
+
+  
+  * **[GET]** to `/celebrities/random/`: returns the celebrities randomly.
+  * **[GET]** to `/celebrities/`: returns the All celebrities in a list.
+  * **[PUT]** to `/celebrities/:id`: updates the celebrities using the `id` passed as part of the URL. Send the an object with the updated information as the `body` of the request (the second argument passed to `axios.put`).
+  * **[DELETE]** to `/celebrities/:id`: removes the celebrity using the `id` passed as part of the URL.
 
   # SCORES
 
-  * **[POST]** * to `/users/login`: returns a token to be added to the header of all other requests. Pass in the following credentials as the `body` of the request: `{ username: 'Lambda School', password: 'i<3Lambd4' }`
-  * **[GET]** to `/users/:id`: returns the single user.
-  * **[GET]** to `/users/`: returns the All users.
+  * **[POST]** * to `/scores/`: Add a new score. 
+  * **[GET]** to `/scores/`: returns the all scores the top 5 users.
+  * **[GET]** to `/scores/:id/`: returns the scores for a single user.
   * **[GET]** to `/:id/scores`: returns the score for the specified user.
-  * **[POST]** to `/users/register`: creates a user and return the new user has been successfully created message. 
-  * **[PUT]** to `/:id`: updates the user using the `id` passed as part of the URL. Send the an object with the updated information as the `body` of the request (the second argument passed to `axios.put`).
-  * **[DELETE]** to `/id`: removes the user using the `id` passed as part of the URL.
+  * **[PUT]** to `/scores/:id`: updates the user score using the `id` passed as part of the URL. Send the an object with the updated information as the `body` of the request (the second argument passed to `axios.put`).
+  * **[DELETE]** to `/scores/id`: removes the user score using the `id` passed as part of the URL.
 
   
+  Please note that with all of the following schema, an ID will automatically be provided to you from the backend server call. 
 
-## Initialize Project
-
-* Run `yarn` or `npm i` inside the root directory of this project to install dependencies.
-* Run `yarn start` or `npm start` to start the API server.
-* Run `create-react-app friends` in a separate terminal window in the root directory of the project to create your starter application.
-* `cd` into the _friends_ folder and type `yarn add axios react-router-dom` which will install the needed dependencies.
-
-## Build the App!
-* Add a route for a login page and build out a simple login form with username and password inputs and a submit button (design this however you would like).
-* The login function should save the returned token to localStorage. You can setup `isLoading` state in your Login component, and show a spinner on your form or in your button while the login request is happening.
-* When the request returns, save the token to `localStorage`, then use the history object in your Login component to navigate your user to your FriendsList route
-* Create a `<PrivateRoute />` component to protect your other routes. It should check localStorage for a token, and redirect the user to your login route if there is not a token.
-* Create a protected route for your friends list. Remember, if the user isn't logged in, navigating to this protected route will redirect them to the login page.
-* In your FriendsList component, rendered with `<ProtectedRoute />`, you will create a list of your friends that you get from the API.
-
-**Adding New Friends**
-* Create a form to collects data for a new friend.
-* Make a POST request to add a friend to the database
-* Each `friend` item that is in the `friends` array should have the following format:
+## Users follow the following Format:
 
 ```js
 {
-  id: 1
-  name: 'Joe',
-  age: 24,
-  email: 'joe@lambdaschool.com',
-}
+          "username": "Michael",
+          "password": "goodformike",
+          "firstName": "Michael",
+          "lastName": "Evans",
+          "email": "mevans@gmail.com",
+          "role": "user"
+        }
 ```
 
-* If you'd like, you can create multiple "view" components for your routes. You could have a component who's sole purpose is to render the login form; one for a form for updating a user; another component who's sole purpose is for creating users; and then another component who's sole purpose is to delete a user.
-* It really is up to you how you build this project. I suggest writing down the flow you want to follow, and then writing down each individual piece you need for each step in the flow so that this process doesn't feel as overwhelming.
+With all fields as required except *role*, which is a string of either 'admin' or 'user'.
 
-## Stretch Problem
+## Scores follow the following Format:
 
-* In the requirements for this project, we implemented a login POST operation, a GET operation, and a "add friend" POST operation. Add two more functions, one for making a PUT request, and the other for making a DELETE request.
-* Style the friends list and the input field and make everything look nice.
-* Expand the number of properties that you put on each friend object. Feel free to remove the dummy data on the server or modify it in any way.
+```js
+{ id: 1, user_id: 1, score: 50 }
+```
+
+With all fields as required.
+
+## Celebrities follow the following Format:
+
+```js
+        { 
+         firstName: "Michael",
+          lastName: "Jackson", 
+          yearOfBirth: 1958, 
+          alive: false, 
+          death: 2009, 
+          image_url:"https://www.billboard.com/files/media/michael-jackson-1996-red-u-billboard-1548.jpg",
+           fact: "King of Pop"
+            },
+
+```
+
+With all fields as required except *image_url*.
+
+** Also with Celebrities, please note 
+
+
+a
