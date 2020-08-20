@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/bw-celebrity-dead-or-alive-1/Backend#readme",
   "dependencies": {
-    "bcrypt": "^3.0.7",
+    "bcrypt": "^5.0.0",
     "bcryptjs": "^2.4.3",
     "connect-session-knex": "^1.5.0",
     "cors": "^2.8.5",
